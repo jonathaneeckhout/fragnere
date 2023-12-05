@@ -1,3 +1,4 @@
+using System;
 using Godot;
 
 public partial class UnitSelectionComponent : Node2D
@@ -13,24 +14,14 @@ public partial class UnitSelectionComponent : Node2D
     public Godot.Collections.Array<Node2D> selectedUnits = new();
 
     private Panel selectionPanel = null;
-    private Area2D selectionArea = null;
-
-    private CollisionShape2D selectionAreaCollisionShape = null;
 
     private bool dragging = false;
     private Vector2 startPoint = Vector2.Zero;
-
-    private Godot.Collections.Array<Node2D> underSelectionUnits = new();
 
 
     public override void _Ready()
     {
         selectionPanel = GetNode<Panel>("SelectionPanel");
-        selectionArea = GetNode<Area2D>("SelectionArea");
-        selectionAreaCollisionShape = GetNode<CollisionShape2D>("SelectionArea/CollisionShape2D");
-
-        selectionArea.BodyEntered += OnBodyEntered;
-        selectionArea.BodyExited += OnBodyExited;
     }
 
     public override void _Process(double delta)
@@ -59,29 +50,45 @@ public partial class UnitSelectionComponent : Node2D
         dragging = true;
         startPoint = GetGlobalMousePosition();
         selectionPanel.Show();
-        selectionAreaCollisionShape.Show();
     }
 
     private void OnRightReleased()
     {
+        Vector2 endPoint = GetGlobalMousePosition();
+        float height = Mathf.Abs(endPoint.Y - startPoint.Y);
+        float width = Mathf.Abs(endPoint.X - startPoint.X);
+
         dragging = false;
 
         if (selectedUnits.Count > 0)
         {
             EmitSignal(SignalName.UnitsDeselected, selectedUnits);
+            selectedUnits.Clear();
         }
 
-        selectedUnits = underSelectionUnits.Duplicate();
+        RectangleShape2D selectRectangle = new()
+        {
+            Size = new Vector2(width, height)
+        };
+        PhysicsDirectSpaceState2D space = GetWorld2D().DirectSpaceState;
+        Vector2 topCorner = CalculateTopCorner(startPoint, endPoint);
+        PhysicsShapeQueryParameters2D query = new()
+        {
+            Shape = selectRectangle,
+            Transform = new Transform2D(0, new Vector2(topCorner.X + (width / 2), topCorner.Y + (height / 2)))
+        };
+        Godot.Collections.Array<Godot.Collections.Dictionary> selected = space.IntersectShape(query);
+        foreach (Godot.Collections.Dictionary res in selected)
+        {
+            selectedUnits.Add(res["collider"].As<Node2D>());
+        }
 
         if (selectedUnits.Count > 0)
         {
             EmitSignal(SignalName.UnitsSelected, selectedUnits);
         }
 
-        underSelectionUnits.Clear();
-
         selectionPanel.Hide();
-        selectionAreaCollisionShape.Hide();
     }
 
     private void DrawSelectionPanel()
@@ -89,52 +96,34 @@ public partial class UnitSelectionComponent : Node2D
         Vector2 currentMousePostion = GetGlobalMousePosition();
         float height = Mathf.Abs(currentMousePostion.Y - startPoint.Y);
         float width = Mathf.Abs(currentMousePostion.X - startPoint.X);
-        Vector2 size = new Vector2(width, height);
-        Vector2 topCorner = Vector2.Zero;
+        Vector2 size = new(width, height);
 
         selectionPanel.Size = size;
 
-        if (selectionAreaCollisionShape.Shape is RectangleShape2D rectangleShape2D)
-        {
-            rectangleShape2D.Size = size;
-        }
+        selectionPanel.Position = CalculateTopCorner(currentMousePostion, startPoint);
+    }
 
-        if (currentMousePostion.X > startPoint.X)
+    private static Vector2 CalculateTopCorner(Vector2 start, Vector2 end)
+    {
+        Vector2 topCorner = new();
+
+        if (end.X > start.X)
         {
-            topCorner.X = startPoint.X;
+            topCorner.X = start.X;
         }
         else
         {
-            topCorner.X = currentMousePostion.X;
+            topCorner.X = end.X;
         }
 
-        if (currentMousePostion.Y > startPoint.Y)
+        if (end.Y > start.Y)
         {
-            topCorner.Y = startPoint.Y;
+            topCorner.Y = start.Y;
         }
         else
         {
-            topCorner.Y = currentMousePostion.Y;
+            topCorner.Y = end.Y;
         }
-
-
-        selectionPanel.Position = topCorner;
-        selectionArea.Position = topCorner + size / 2;
-    }
-
-    private void OnBodyEntered(Node2D body)
-    {
-        if (!underSelectionUnits.Contains(body))
-        {
-            underSelectionUnits.Add(body);
-        }
-    }
-
-    private void OnBodyExited(Node2D body)
-    {
-        if (underSelectionUnits.Contains(body))
-        {
-            underSelectionUnits.Remove(body);
-        }
+        return topCorner;
     }
 }

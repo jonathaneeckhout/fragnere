@@ -1,9 +1,6 @@
-[gd_scene load_steps=3 format=3 uid="uid://d3mevpeo4vi8f"]
+[gd_scene load_steps=2 format=3 uid="uid://d3mevpeo4vi8f"]
 
 [ext_resource type="Script" path="res://components/player/unit_selection_component/UnitSelectionComponent.cs" id="1_sbhud"]
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_rasvl"]
-size = Vector2(40, 40)
 
 [node name="UnitSelectionComponent" type="Node2D"]
 script = ExtResource("1_sbhud")
@@ -17,9 +14,3 @@ anchor_right = 0.5
 anchor_bottom = 0.5
 grow_horizontal = 2
 grow_vertical = 2
-
-[node name="SelectionArea" type="Area2D" parent="."]
-visible = false
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="SelectionArea"]
-shape = SubResource("RectangleShape2D_rasvl")
