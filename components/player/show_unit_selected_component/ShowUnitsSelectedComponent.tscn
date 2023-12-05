@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://blbc78pquhpq5"]
+
+[ext_resource type="Script" path="res://components/player/show_unit_selected_component/ShowUnitsSelectedComponent.cs" id="1_2xui0"]
+
+[node name="ShowUnitsSelectedComponent" type="Node"]
+script = ExtResource("1_2xui0")

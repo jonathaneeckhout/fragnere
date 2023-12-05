@@ -1,8 +1,17 @@
 using Godot;
-using System;
 
 public partial class UnitSelectionComponent : Node2D
 {
+    [Signal]
+    public delegate void UnitsSelectedEventHandler(Godot.Collections.Array<Node2D> units);
+
+    [Signal]
+    public delegate void UnitsDeselectedEventHandler(Godot.Collections.Array<Node2D> units);
+
+
+    [Export]
+    public Godot.Collections.Array<Node2D> selectedUnits = new();
+
     private Panel selectionPanel = null;
     private Area2D selectionArea = null;
 
@@ -12,8 +21,7 @@ public partial class UnitSelectionComponent : Node2D
     private Vector2 startPoint = Vector2.Zero;
 
     private Godot.Collections.Array<Node2D> underSelectionUnits = new();
-    [Export]
-    public Godot.Collections.Array<Node2D> selectedUnits = new();
+
 
     public override void _Ready()
     {
@@ -36,11 +44,11 @@ public partial class UnitSelectionComponent : Node2D
     public override void _Input(InputEvent @event)
     {
         // Hide the settings menu if visible.
-        if (Input.IsActionJustPressed("right_click"))
+        if (Input.IsActionJustPressed("left_click"))
         {
             OnRightClicked();
         }
-        else if (Input.IsActionJustReleased("right_click"))
+        else if (Input.IsActionJustReleased("left_click"))
         {
             OnRightReleased();
         }
@@ -58,7 +66,18 @@ public partial class UnitSelectionComponent : Node2D
     {
         dragging = false;
 
+        if (selectedUnits.Count > 0)
+        {
+            EmitSignal(SignalName.UnitsDeselected, selectedUnits);
+        }
+
         selectedUnits = underSelectionUnits.Duplicate();
+
+        if (selectedUnits.Count > 0)
+        {
+            EmitSignal(SignalName.UnitsSelected, selectedUnits);
+        }
+
         underSelectionUnits.Clear();
 
         selectionPanel.Hide();
