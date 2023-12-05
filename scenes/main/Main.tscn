@@ -1,0 +1,12 @@
+[gd_scene load_steps=3 format=3 uid="uid://b577qom18qnch"]
+
+[ext_resource type="PackedScene" uid="uid://8aojgc5hh12y" path="res://scenes/maps/lowlands/LowLands.tscn" id="1_gplwi"]
+[ext_resource type="PackedScene" uid="uid://bye2xl0bpf86k" path="res://scenes/player/Player.tscn" id="2_gslns"]
+
+[node name="Main" type="Node2D"]
+
+[node name="Map" type="Node2D" parent="."]
+
+[node name="LowLands" parent="Map" instance=ExtResource("1_gplwi")]
+
+[node name="Player" parent="." instance=ExtResource("2_gslns")]

@@ -1,0 +1,46 @@
+[gd_scene load_steps=9 format=3 uid="uid://dieogyh6bivxt"]
+
+[ext_resource type="Texture2D" uid="uid://o2tul30o00nl" path="res://assets/images/units/worker/body.png" id="1_up55f"]
+[ext_resource type="Texture2D" uid="uid://b31eevgyb8h0t" path="res://assets/images/units/worker/head.png" id="2_se365"]
+[ext_resource type="Texture2D" uid="uid://oi4ihcpuldbu" path="res://assets/images/units/worker/lefthand.png" id="3_2jgtm"]
+[ext_resource type="Texture2D" uid="uid://6cgkk4mfqi7w" path="res://assets/images/units/worker/leftleg.png" id="4_c0imo"]
+[ext_resource type="Texture2D" uid="uid://1hpni4o5jc0t" path="res://assets/images/units/worker/righthand.png" id="5_qbomb"]
+[ext_resource type="Texture2D" uid="uid://dgpmmkpt6rlby" path="res://assets/images/units/worker/rightleg.png" id="6_wmbfq"]
+[ext_resource type="Texture2D" uid="uid://o0s3a5a1xxut" path="res://assets/images/units/worker/worker.png" id="7_o08h3"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_5xbq0"]
+
+[node name="Worker" type="CharacterBody2D"]
+
+[node name="CollisionBox" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_5xbq0")
+
+[node name="Sprites" type="Node2D" parent="."]
+
+[node name="Body" type="Sprite2D" parent="Sprites"]
+position = Vector2(0.5, -41)
+texture = ExtResource("1_up55f")
+
+[node name="Head" type="Sprite2D" parent="Sprites"]
+position = Vector2(0.5, -41)
+texture = ExtResource("2_se365")
+
+[node name="Lefthand" type="Sprite2D" parent="Sprites"]
+position = Vector2(0.5, -41)
+texture = ExtResource("3_2jgtm")
+
+[node name="Leftleg" type="Sprite2D" parent="Sprites"]
+position = Vector2(0.5, -41)
+texture = ExtResource("4_c0imo")
+
+[node name="Righthand" type="Sprite2D" parent="Sprites"]
+position = Vector2(0.5, -41)
+texture = ExtResource("5_qbomb")
+
+[node name="Rightleg" type="Sprite2D" parent="Sprites"]
+position = Vector2(0.5, -41)
+texture = ExtResource("6_wmbfq")
+
+[node name="Worker" type="Sprite2D" parent="Sprites"]
+position = Vector2(0.5, -41)
+texture = ExtResource("7_o08h3")

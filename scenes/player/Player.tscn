@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://bye2xl0bpf86k"]
+
+[ext_resource type="PackedScene" uid="uid://d3mevpeo4vi8f" path="res://components/player/unit_selection_component/UnitSelectionComponent.tscn" id="1_crag0"]
+
+[node name="Player" type="Node2D"]
+
+[node name="Camera2D" type="Camera2D" parent="."]
+
+[node name="UnitSelectionComponent" parent="." instance=ExtResource("1_crag0")]
