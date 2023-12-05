@@ -13,7 +13,6 @@ public partial class Player : Node2D
     }
     public override void _Input(InputEvent @event)
     {
-        // Hide the settings menu if visible.
         if (Input.IsActionJustPressed("right_click"))
         {
             Vector2 position = GetGlobalMousePosition();
