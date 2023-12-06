@@ -5,26 +5,14 @@ public partial class Player : Node2D
 {
     private UnitSelectionComponent unit_selection_component = null;
     private ShowUnitsSelectedComponent show_unit_component = null;
+    private InputComponent input_component = null;
     public override void _Ready()
     {
         unit_selection_component = GetNode<UnitSelectionComponent>("UnitSelectionComponent");
         show_unit_component = GetNode<ShowUnitsSelectedComponent>("ShowUnitsSelectedComponent");
         show_unit_component.Init(unit_selection_component);
+        input_component = GetNode<InputComponent>("InputComponent");
     }
-    public override void _Input(InputEvent @event)
-    {
-        if (Input.IsActionJustPressed("right_click"))
-        {
-            Vector2 position = GetGlobalMousePosition();
-            foreach (Node2D unit in unit_selection_component.selectedUnits)
-            {
-                if (unit.HasMethod("Move"))
-                {
-                    unit.Call("Move", position);
-                }
 
-            }
-        }
-    }
 
 }

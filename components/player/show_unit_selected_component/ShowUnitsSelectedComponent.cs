@@ -15,6 +15,7 @@ public partial class ShowUnitsSelectedComponent : Node
         {
             if (unit.HasMethod("SetSelected"))
             {
+                unit.AddToGroup("selected");
                 unit.Call("SetSelected", true);
             }
 
@@ -27,6 +28,7 @@ public partial class ShowUnitsSelectedComponent : Node
         {
             if (unit.HasMethod("SetSelected"))
             {
+                unit.RemoveFromGroup("selected");
                 unit.Call("SetSelected", false);
             }
 
