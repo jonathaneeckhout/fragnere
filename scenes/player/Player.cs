@@ -3,15 +3,15 @@ using System;
 
 public partial class Player : Node2D
 {
-    private UnitSelectionComponent unit_selection_component = null;
-    private ShowUnitsSelectedComponent show_unit_component = null;
-    private InputComponent input_component = null;
+    private UnitSelectionComponent _unitSelectionComponent = null;
+    private ShowUnitsSelectedComponent _showUnitsSelectedComponent = null;
+    private InputComponent _inputComponent = null;
+
     public override void _Ready()
     {
-        unit_selection_component = GetNode<UnitSelectionComponent>("UnitSelectionComponent");
-        show_unit_component = GetNode<ShowUnitsSelectedComponent>("ShowUnitsSelectedComponent");
-        show_unit_component.Init(unit_selection_component);
-        input_component = GetNode<InputComponent>("InputComponent");
+        _unitSelectionComponent = GetNode<UnitSelectionComponent>("UnitSelectionComponent");
+        _showUnitsSelectedComponent = GetNode<ShowUnitsSelectedComponent>("ShowUnitsSelectedComponent");
+        _inputComponent = GetNode<InputComponent>("InputComponent");
     }
 
 

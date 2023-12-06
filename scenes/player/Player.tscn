@@ -1,8 +1,9 @@
-[gd_scene load_steps=5 format=3 uid="uid://bye2xl0bpf86k"]
+[gd_scene load_steps=6 format=3 uid="uid://bye2xl0bpf86k"]
 
 [ext_resource type="PackedScene" uid="uid://d3mevpeo4vi8f" path="res://components/player/unit_selection_component/UnitSelectionComponent.tscn" id="1_crag0"]
 [ext_resource type="Script" path="res://scenes/player/Player.cs" id="1_krh4x"]
 [ext_resource type="PackedScene" uid="uid://blbc78pquhpq5" path="res://components/player/show_unit_selected_component/ShowUnitsSelectedComponent.tscn" id="2_pp048"]
+[ext_resource type="PackedScene" uid="uid://0k7xu1ttcdcc" path="res://components/player/unit_group_component/UnitGroupComponent.tscn" id="4_g70y0"]
 [ext_resource type="PackedScene" uid="uid://dujyesxnwgx3a" path="res://components/player/input_component/InputComponent.tscn" id="4_nt6aa"]
 
 [node name="Player" type="Node2D"]
@@ -10,9 +11,14 @@ script = ExtResource("1_krh4x")
 
 [node name="UnitSelectionComponent" parent="." instance=ExtResource("1_crag0")]
 
-[node name="ShowUnitsSelectedComponent" parent="." instance=ExtResource("2_pp048")]
+[node name="ShowUnitsSelectedComponent" parent="." node_paths=PackedStringArray("_unitSelectionComponent") instance=ExtResource("2_pp048")]
+_unitSelectionComponent = NodePath("../UnitSelectionComponent")
 
-[node name="InputComponent" parent="." instance=ExtResource("4_nt6aa")]
+[node name="UnitGroupComponent" parent="." node_paths=PackedStringArray("_unitSelectionComponent") instance=ExtResource("4_g70y0")]
+_unitSelectionComponent = NodePath("../UnitSelectionComponent")
+
+[node name="InputComponent" parent="." node_paths=PackedStringArray("UnitGroupComponent") instance=ExtResource("4_nt6aa")]
+UnitGroupComponent = NodePath("../UnitGroupComponent")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 anchor_mode = 0

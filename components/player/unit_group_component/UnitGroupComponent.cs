@@ -1,10 +1,14 @@
 using Godot;
 using System;
 
-public partial class ShowUnitsSelectedComponent : Node
+public partial class UnitGroupComponent : Node
 {
+
     [Export]
     private UnitSelectionComponent _unitSelectionComponent = null;
+
+    public CharacterBody2D Leader = null;
+    public Godot.Collections.Array<Unit> Units = new();
 
     public override void _Ready()
     {
@@ -14,17 +18,26 @@ public partial class ShowUnitsSelectedComponent : Node
 
     void OnUnitsSelected(Godot.Collections.Array<Unit> units)
     {
-        foreach (Unit unit in units)
+        Leader = null;
+        Units = units.Duplicate();
+        for (int i = 0; i < Units.Count; i++)
         {
-            unit.SetSelected(true);
+
         }
     }
 
     void OnUnitsDeselected(Godot.Collections.Array<Unit> units)
     {
-        foreach (Unit unit in units)
+        Leader = null;
+        Units.Clear();
+    }
+
+    public void Move(Vector2 position)
+    {
+        foreach (Unit unit in Units)
         {
-            unit.SetSelected(false);
+            unit.Move(position);
         }
     }
+
 }

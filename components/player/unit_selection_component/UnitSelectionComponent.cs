@@ -4,14 +4,14 @@ using Godot;
 public partial class UnitSelectionComponent : Node2D
 {
     [Signal]
-    public delegate void UnitsSelectedEventHandler(Godot.Collections.Array<Node2D> units);
+    public delegate void UnitsSelectedEventHandler(Godot.Collections.Array<Unit> units);
 
     [Signal]
-    public delegate void UnitsDeselectedEventHandler(Godot.Collections.Array<Node2D> units);
+    public delegate void UnitsDeselectedEventHandler(Godot.Collections.Array<Unit> units);
 
 
     [Export]
-    public Godot.Collections.Array<Node2D> selectedUnits = new();
+    public Godot.Collections.Array<Unit> selectedUnits = new();
 
     private Panel selectionPanel = null;
 
@@ -80,7 +80,9 @@ public partial class UnitSelectionComponent : Node2D
         Godot.Collections.Array<Godot.Collections.Dictionary> selected = space.IntersectShape(query);
         foreach (Godot.Collections.Dictionary res in selected)
         {
-            selectedUnits.Add(res["collider"].As<Node2D>());
+
+            selectedUnits.Add(res["collider"].As<Unit>());
+
         }
 
         if (selectedUnits.Count > 0)

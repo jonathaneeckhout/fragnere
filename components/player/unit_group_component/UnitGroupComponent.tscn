@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://0k7xu1ttcdcc"]
+
+[ext_resource type="Script" path="res://components/player/unit_group_component/UnitGroupComponent.cs" id="1_rql4e"]
+
+[node name="UnitGroupComponent" type="Node"]
+script = ExtResource("1_rql4e")

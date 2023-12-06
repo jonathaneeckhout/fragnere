@@ -1,7 +1,8 @@
-[gd_scene load_steps=11 format=3 uid="uid://dieogyh6bivxt"]
+[gd_scene load_steps=12 format=3 uid="uid://dieogyh6bivxt"]
 
 [ext_resource type="Script" path="res://scenes/units/worker/Worker.cs" id="1_ucjss"]
 [ext_resource type="Texture2D" uid="uid://o2tul30o00nl" path="res://assets/images/units/worker/body.png" id="1_up55f"]
+[ext_resource type="PackedScene" uid="uid://tomenv4ujo6r" path="res://components/units/steering_component/SteeringComponent.tscn" id="2_p1372"]
 [ext_resource type="Texture2D" uid="uid://b31eevgyb8h0t" path="res://assets/images/units/worker/head.png" id="2_se365"]
 [ext_resource type="Texture2D" uid="uid://oi4ihcpuldbu" path="res://assets/images/units/worker/lefthand.png" id="3_2jgtm"]
 [ext_resource type="Texture2D" uid="uid://6cgkk4mfqi7w" path="res://assets/images/units/worker/leftleg.png" id="4_c0imo"]
@@ -17,6 +18,8 @@ bg_color = Color(0.6, 0.643137, 0.282353, 1)
 
 [node name="Worker" type="CharacterBody2D"]
 script = ExtResource("1_ucjss")
+
+[node name="SteeringComponent" parent="." instance=ExtResource("2_p1372")]
 
 [node name="CollisionBox" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_5xbq0")
