@@ -26,4 +26,9 @@ public partial class Unit : CharacterBody2D
     {
         SteeringComponent.TargetPostion = position;
     }
+
+    public void SetUnitGroupComponent(UnitGroupComponent unitGroupComponent)
+    {
+        SteeringComponent.UnitGroupComponent = unitGroupComponent;
+    }
 }

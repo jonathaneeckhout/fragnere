@@ -7,7 +7,7 @@ public partial class UnitGroupComponent : Node
     [Export]
     private UnitSelectionComponent _unitSelectionComponent = null;
 
-    public CharacterBody2D Leader = null;
+    public Unit Leader = null;
     public Godot.Collections.Array<Unit> Units = new();
 
     public override void _Ready()
@@ -22,7 +22,11 @@ public partial class UnitGroupComponent : Node
         Units = units.Duplicate();
         for (int i = 0; i < Units.Count; i++)
         {
-
+            if (i == 0)
+            {
+                Leader = Units[i];
+            }
+            Units[i].SetUnitGroupComponent(this);
         }
     }
 

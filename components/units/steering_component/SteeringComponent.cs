@@ -24,6 +24,8 @@ public partial class SteeringComponent : Node2D
     [Export]
     public Vector2 TargetPostion = Vector2.Zero;
 
+    private bool _move = false;
+
     private CharacterBody2D _targetUnit = null;
 
 
@@ -38,7 +40,7 @@ public partial class SteeringComponent : Node2D
     {
         Vector2 steering = Vector2.Zero;
 
-        if (UnitGroupComponent == null || UnitGroupComponent.Leader != _targetUnit)
+        if (UnitGroupComponent == null || UnitGroupComponent.Leader == _targetUnit)
         {
             steering += Seek(TargetPostion, _arrivalDistance);
         }
@@ -83,21 +85,15 @@ public partial class SteeringComponent : Node2D
 
         force = desired - _targetUnit.Velocity;
 
-        return force;
+        return force.Normalized();
     }
 
-    Vector2 Evade(Vector2 target)
+    Vector2 Evade(Unit target)
     {
-        float distance;
-        float updatesNeeded;
-        Vector2 tv;
-        Vector2 targetFuturePosition = Vector2.Zero;
-
-        // distance = _targetUnit.Position.DistanceTo(target);
-        // updatesNeeded = distance / _maxSpeed;
-        // tv = _targetUnit.Velocity / updatesNeeded;
-
-        // targetFuturePosition = _targetUnit.Position + tv;
+        float distance = _targetUnit.Position.DistanceTo(target.Position);
+        float updatesNeeded = distance / _speed;
+        Vector2 tv = target.Velocity * updatesNeeded;
+        Vector2 targetFuturePosition = _targetUnit.Position + tv;
 
         return Flee(targetFuturePosition);
 
@@ -109,7 +105,7 @@ public partial class SteeringComponent : Node2D
         return force;
     }
 
-    Vector2 FollowLeader(CharacterBody2D leader)
+    Vector2 FollowLeader(Unit leader)
     {
         Vector2 tv = leader.Velocity;
         Vector2 force = Vector2.Zero;
@@ -117,28 +113,33 @@ public partial class SteeringComponent : Node2D
         Vector2 behind;
 
         tv = tv.Normalized();
-        tv /= _leaderBehindDistance;
+        tv *= _leaderBehindDistance;
 
         ahead = leader.Position + tv;
 
-        tv /= -1;
+        tv *= -1;
 
         behind = leader.Position + tv;
 
         if (IsOnLeaderSight(leader, ahead))
         {
-            force += Evade(leader.Position);
-            force /= 1.8f;
+            force += Evade(leader);
+            force *= 1.8f;
         }
 
         force += Arrive(behind, _arrivalDistance / 4);
 
-        return force;
+        return force.Normalized();
     }
 
     bool IsOnLeaderSight(CharacterBody2D leader, Vector2 leaderAhead)
     {
         return leaderAhead.DistanceTo(_targetUnit.Position) <= _leaderSightRadius || leader.Position.DistanceTo(_targetUnit.Position) <= _leaderSightRadius;
+    }
+
+    public void Move(Vector2 position)
+    {
+
     }
 
 }
