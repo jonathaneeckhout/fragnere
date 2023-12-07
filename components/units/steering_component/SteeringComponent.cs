@@ -57,7 +57,6 @@ public partial class SteeringComponent : Node2D
                 else
                 {
                     steering += Seek(_targetPosition, _arrivalDistance) * 0.8f;
-
                 }
             }
         }
@@ -76,17 +75,15 @@ public partial class SteeringComponent : Node2D
                 else
                 {
                     steering += seek;
-
                 }
             }
-
             steering += separation;
         }
 
         // steering += Separation();
         _targetUnit.Velocity = steering.Normalized() * _speed;
-        _targetUnit.Position += _targetUnit.Velocity * (float)delta;
-        // _targetUnit.MoveAndSlide();
+        // _targetUnit.Position += _targetUnit.Velocity * (float)delta;
+        _targetUnit.MoveAndSlide();
     }
 
     Vector2 Seek(Vector2 target, int slowingRadius = 1)
