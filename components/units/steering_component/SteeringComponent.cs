@@ -12,6 +12,12 @@ public partial class SteeringComponent : Node2D
     [Export(PropertyHint.Range, "0,128,1,or_greater")]
     private int _arrivalDistance = 16;
 
+    [Export(PropertyHint.Range, "0,128,1,or_greater")]
+    private int _separationDistance = 96;
+
+    [Export(PropertyHint.Range, "0,128,1,or_greater")]
+    private int _cohesionDistance = 256;
+
     [Export(PropertyHint.Range, "0,1024,8,or_greater")]
     private int _leaderBehindDistance = 32;
 
@@ -21,10 +27,8 @@ public partial class SteeringComponent : Node2D
     [Export]
     public UnitGroupComponent UnitGroupComponent = null;
 
-    [Export]
-    public Vector2 TargetPostion = Vector2.Zero;
-
-    private bool _move = false;
+    public bool Moving = false;
+    private Vector2 _targetPosition = Vector2.Zero;
 
     private CharacterBody2D _targetUnit = null;
 
@@ -32,7 +36,7 @@ public partial class SteeringComponent : Node2D
     public override void _Ready()
     {
         _targetUnit = GetNode<CharacterBody2D>("../");
-        TargetPostion = _targetUnit.Position;
+        _targetPosition = _targetUnit.Position;
     }
 
     // Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -42,13 +46,17 @@ public partial class SteeringComponent : Node2D
 
         if (UnitGroupComponent == null || UnitGroupComponent.Leader == _targetUnit)
         {
-            steering += Seek(TargetPostion, _arrivalDistance);
+            steering += Seek(_targetPosition, _arrivalDistance);
         }
         else
         {
+
             steering += FollowLeader(UnitGroupComponent.Leader);
         }
-        _targetUnit.Velocity = steering * _speed;
+
+        steering += Separation();
+        _targetUnit.Velocity = steering.Normalized() * _speed;
+
         _targetUnit.MoveAndSlide();
     }
 
@@ -68,7 +76,7 @@ public partial class SteeringComponent : Node2D
 
         force = desired;
 
-        return force;
+        return force.Normalized();
     }
 
     Vector2 Arrive(Vector2 target, int slowingRadius = 16)
@@ -102,8 +110,60 @@ public partial class SteeringComponent : Node2D
     Vector2 Separation()
     {
         Vector2 force = Vector2.Zero;
+        int neighborCount = 0;
+
+        if (UnitGroupComponent == null)
+        {
+            return Vector2.Zero;
+        }
+
+        foreach (Unit unit in UnitGroupComponent.Units)
+        {
+            if (unit != _targetUnit && _targetUnit.Position.DistanceTo(unit.Position) <= _separationDistance)
+            {
+                force += unit.Position.DirectionTo(_targetUnit.Position);
+                neighborCount++;
+            }
+        }
+
+        if (neighborCount > 0)
+        {
+            force /= neighborCount;
+        }
+
+
+        return force.Normalized();
+    }
+
+    Vector2 Cohesion()
+    {
+        Vector2 middlePoint = Vector2.Zero;
+        Vector2 force = Vector2.Zero;
+        int neighborCount = 0;
+
+        if (UnitGroupComponent == null)
+        {
+            return Vector2.Zero;
+        }
+
+        foreach (Unit unit in UnitGroupComponent.Units)
+        {
+            if (unit != _targetUnit && _targetUnit.Position.DistanceTo(unit.Position) <= _cohesionDistance)
+            {
+                middlePoint += unit.Position;
+                neighborCount++;
+            }
+        }
+
+        if (neighborCount > 0)
+        {
+            middlePoint /= neighborCount;
+            force = _targetUnit.Position.DirectionTo(middlePoint);
+        }
+
         return force;
     }
+
 
     Vector2 FollowLeader(Unit leader)
     {
@@ -139,7 +199,8 @@ public partial class SteeringComponent : Node2D
 
     public void Move(Vector2 position)
     {
-
+        Moving = true;
+        _targetPosition = position;
     }
 
 }

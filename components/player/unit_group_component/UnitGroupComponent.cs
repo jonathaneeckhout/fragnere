@@ -32,14 +32,35 @@ public partial class UnitGroupComponent : Node
 
     void OnUnitsDeselected(Godot.Collections.Array<Unit> units)
     {
-        Leader = null;
+        for (int i = 0; i < Units.Count; i++)
+        {
+            Units[i].SetUnitGroupComponent(null);
+        }
         Units.Clear();
+        Leader = null;
     }
 
     public void Move(Vector2 position)
     {
+        float closestDistance = 0.0f;
+        Unit closestUnit = null;
         foreach (Unit unit in Units)
         {
+            if (closestUnit == null)
+            {
+                closestDistance = unit.Position.DistanceTo(position);
+                closestUnit = unit;
+            }
+            else
+            {
+                float distance = unit.Position.DistanceTo(position);
+                if (distance < closestDistance)
+                {
+                    closestDistance = distance;
+                    closestUnit = unit;
+                }
+            }
+            Leader = closestUnit;
             unit.Move(position);
         }
     }

@@ -24,11 +24,16 @@ public partial class Unit : CharacterBody2D
 
     public void Move(Vector2 position)
     {
-        SteeringComponent.TargetPostion = position;
+        SteeringComponent.Move(position);
     }
 
     public void SetUnitGroupComponent(UnitGroupComponent unitGroupComponent)
     {
         SteeringComponent.UnitGroupComponent = unitGroupComponent;
+    }
+
+    public bool IsMoving()
+    {
+        return SteeringComponent.Moving;
     }
 }
