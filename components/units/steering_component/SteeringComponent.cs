@@ -44,20 +44,49 @@ public partial class SteeringComponent : Node2D
     {
         Vector2 steering = Vector2.Zero;
 
+        // Leader
         if (UnitGroupComponent == null || UnitGroupComponent.Leader == _targetUnit)
         {
-            steering += Seek(_targetPosition, _arrivalDistance);
+            if (Moving)
+            {
+                if (_targetUnit.Position.DistanceTo(_targetPosition) < 8)
+                {
+                    Moving = false;
+                    _targetPosition = Position;
+                }
+                else
+                {
+                    steering += Seek(_targetPosition, _arrivalDistance) * 0.8f;
+
+                }
+            }
         }
+        // Rest of the group
         else
         {
+            Vector2 separation = Separation();
+            if (Moving)
+            {
+                Vector2 seek = Seek(_targetPosition, _arrivalDistance) * 0.8f;
+                if (!UnitGroupComponent.Leader.IsMoving() && separation.Length() > seek.Length())
+                {
+                    Moving = false;
+                    _targetPosition = Position;
+                }
+                else
+                {
+                    steering += seek;
 
-            steering += FollowLeader(UnitGroupComponent.Leader);
+                }
+            }
+
+            steering += separation;
         }
 
-        steering += Separation();
+        // steering += Separation();
         _targetUnit.Velocity = steering.Normalized() * _speed;
-
-        _targetUnit.MoveAndSlide();
+        _targetUnit.Position += _targetUnit.Velocity * (float)delta;
+        // _targetUnit.MoveAndSlide();
     }
 
     Vector2 Seek(Vector2 target, int slowingRadius = 1)

@@ -74,15 +74,20 @@ public partial class UnitSelectionComponent : Node2D
         Vector2 topCorner = CalculateTopCorner(startPoint, endPoint);
         PhysicsShapeQueryParameters2D query = new()
         {
+            CollideWithAreas = false,
+            CollideWithBodies = true,
+            CollisionMask = 2,
             Shape = selectRectangle,
             Transform = new Transform2D(0, new Vector2(topCorner.X + (width / 2), topCorner.Y + (height / 2)))
         };
         Godot.Collections.Array<Godot.Collections.Dictionary> selected = space.IntersectShape(query);
         foreach (Godot.Collections.Dictionary res in selected)
         {
-
-            selectedUnits.Add(res["collider"].As<Unit>());
-
+            Node node = res["collider"].As<Node>();
+            if (node is Unit unit)
+            {
+                selectedUnits.Add(unit);
+            }
         }
 
         if (selectedUnits.Count > 0)

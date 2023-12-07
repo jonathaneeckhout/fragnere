@@ -22,10 +22,6 @@ public partial class UnitGroupComponent : Node
         Units = units.Duplicate();
         for (int i = 0; i < Units.Count; i++)
         {
-            if (i == 0)
-            {
-                Leader = Units[i];
-            }
             Units[i].SetUnitGroupComponent(this);
         }
     }
@@ -41,6 +37,43 @@ public partial class UnitGroupComponent : Node
     }
 
     public void Move(Vector2 position)
+    {
+        Vector2 average;
+
+        if (Units.Count == 0)
+        {
+            return;
+        }
+
+        average = CalculateAveragePosition();
+        Leader = FindUnitClosestToPostion(average);
+
+        foreach (Unit unit in Units)
+        {
+            unit.Move(position);
+        }
+    }
+
+    Vector2 CalculateAveragePosition()
+    {
+        Vector2 average = Vector2.Zero;
+
+        if (Units.Count == 0)
+        {
+            return average;
+        }
+
+        foreach (Unit unit in Units)
+        {
+            average += unit.Position;
+        }
+
+        average /= Units.Count;
+
+        return average;
+    }
+
+    Unit FindUnitClosestToPostion(Vector2 position)
     {
         float closestDistance = 0.0f;
         Unit closestUnit = null;
@@ -60,9 +93,8 @@ public partial class UnitGroupComponent : Node
                     closestUnit = unit;
                 }
             }
-            Leader = closestUnit;
-            unit.Move(position);
         }
+        return closestUnit;
     }
 
 }

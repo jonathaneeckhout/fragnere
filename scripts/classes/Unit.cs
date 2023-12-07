@@ -15,7 +15,6 @@ public partial class Unit : CharacterBody2D
         SelectedPanel = GetNode<Panel>("SelectedPanel");
     }
 
-
     public void SetSelected(bool value)
     {
         SelectedPanel.Visible = value;
